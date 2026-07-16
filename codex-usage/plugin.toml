@@ -1,0 +1,68 @@
+id = "aaronroquefonseca/codex-usage"
+name = "Codex Usage"
+version = "0.1.0"
+min_noctalia = "5.0.0"
+author = "Aaron Roque Fonseca"
+license = "MIT"
+description = "Shows OpenAI Codex usage limits and reset credits in Noctalia v5."
+tags = ["AI", "Development", "Utility"]
+dependencies = ["python3", "codex"]
+icon = "code"
+
+[[setting]]
+key = "panel_style"
+type = "select"
+label_key = "settings.panel_style.label"
+description_key = "settings.panel_style.description"
+default = "full"
+options = [
+  { value = "full", label_key = "settings.panel_style.options.full" },
+  { value = "usage", label_key = "settings.panel_style.options.usage" },
+  { value = "icon", label_key = "settings.panel_style.options.icon" },
+]
+
+[[setting]]
+key = "display_mode"
+type = "select"
+label_key = "settings.display_mode.label"
+description_key = "settings.display_mode.description"
+default = "both"
+options = [
+  { value = "both", label_key = "settings.display_mode.options.both" },
+  { value = "primary", label_key = "settings.display_mode.options.primary" },
+  { value = "secondary", label_key = "settings.display_mode.options.secondary" },
+]
+
+[[setting]]
+key = "refresh_interval_seconds"
+type = "int"
+label_key = "settings.refresh_interval.label"
+description_key = "settings.refresh_interval.description"
+default = 300
+min = 60
+max = 3600
+step = 30
+
+[[setting]]
+key = "codex_path"
+type = "file"
+label_key = "settings.codex_path.label"
+description_key = "settings.codex_path.description"
+default = ""
+
+[[service]]
+id = "usage-service"
+entry = "v5/service.luau"
+
+[[widget]]
+id = "bar"
+entry = "v5/widget.luau"
+
+[[panel]]
+id = "details"
+entry = "v5/panel.luau"
+width = 360
+height = 380
+placement = "floating"
+position = "auto"
+open_near_click = true

@@ -1,0 +1,10 @@
+{
+  "settings.search_engine.label": "Search engine",
+  "settings.search_engine.description": "Engine used for launcher web searches.",
+  "settings.search_engine.options.startpage": "Startpage",
+  "settings.search_engine.options.google": "Google",
+  "settings.search_engine.options.duckduckgo": "DuckDuckGo",
+  "settings.search_engine.options.custom": "Custom",
+  "settings.custom_search_url.label": "Custom search URL",
+  "settings.custom_search_url.description": "URL template containing {query}; the encoded query is appended when omitted."
+}

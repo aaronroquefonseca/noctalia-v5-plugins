@@ -1,0 +1,57 @@
+# Noctalia v5 plugin source catalog.
+# Plugin manifests are authoritative.
+
+[[plugin]]
+id = "aaronroquefonseca/codex-usage"
+name = "Codex Usage"
+version = "0.1.0"
+author = "Aaron Roque Fonseca"
+license = "MIT"
+icon = "code"
+description = "Shows OpenAI Codex usage limits and reset credits in Noctalia v5."
+min_noctalia = "5.0.0"
+tags = ["AI", "Development", "Utility"]
+
+[[plugin]]
+id = "aaronroquefonseca/arch-updater"
+name = "Arch Updater"
+version = "0.1.0"
+author = "Aaron Roque Fonseca"
+license = "MIT"
+icon = "navigation-filled"
+description = "Shows Arch, AUR, and Flatpak updates and launches your updater."
+min_noctalia = "5.0.0"
+tags = ["System", "Utility"]
+
+[[plugin]]
+id = "aaronroquefonseca/web-search"
+name = "Web Search"
+version = "0.1.0"
+author = "Aaron Roque Fonseca"
+license = "MIT"
+icon = "world-search"
+description = "Search the web from Noctalia's launcher using your default browser."
+min_noctalia = "5.0.0"
+tags = ["Utility", "Launcher"]
+
+[[plugin]]
+id = "aaronroquefonseca/file-search"
+name = "File Search"
+version = "0.1.0"
+author = "Aaron Roque Fonseca"
+license = "MIT"
+icon = "file-search"
+description = "Search files and folders from Noctalia's launcher."
+min_noctalia = "5.0.0"
+tags = ["Productivity", "Launcher", "Utility"]
+
+[[plugin]]
+id = "aaronroquefonseca/usb-drive-manager"
+name = "USB Drive Manager"
+version = "0.1.0"
+author = "Aaron Roque Fonseca"
+license = "MIT"
+icon = "usb"
+description = "Mount, open, unmount, and safely power off removable USB drives."
+min_noctalia = "5.0.0"
+tags = ["System", "Utility"]

@@ -1,0 +1,73 @@
+id = "aaronroquefonseca/arch-updater"
+name = "Arch Updater"
+version = "0.1.0"
+min_noctalia = "5.0.0"
+author = "Aaron Roque Fonseca"
+license = "MIT"
+description = "Shows Arch, AUR, and Flatpak updates and launches your updater."
+tags = ["System", "Utility"]
+dependencies = ["pacman-contrib"]
+icon = "navigation-filled"
+
+[[setting]]
+key = "system_command"
+type = "string"
+label_key = "settings.system_command.label"
+description_key = "settings.system_command.description"
+default = "checkupdates 2>/dev/null"
+advanced = true
+
+[[setting]]
+key = "aur_command"
+type = "string"
+label_key = "settings.aur_command.label"
+description_key = "settings.aur_command.description"
+default = "yay -Qua 2>/dev/null"
+advanced = true
+
+[[setting]]
+key = "flatpak_enabled"
+type = "bool"
+label_key = "settings.flatpak_enabled.label"
+default = true
+
+[[setting]]
+key = "update_command"
+type = "string"
+label_key = "settings.update_command.label"
+description_key = "settings.update_command.description"
+default = "ghostty --class=com.aaronroque.update-terminal -e sh -c 'topgrade; echo \"Done - Press enter to exit\"; read _'"
+
+[[setting]]
+key = "refresh_interval_minutes"
+type = "int"
+label_key = "settings.refresh_interval.label"
+description_key = "settings.refresh_interval.description"
+default = 120
+min = 5
+max = 1440
+step = 5
+
+[[setting]]
+key = "hide_when_empty"
+type = "bool"
+label_key = "settings.hide_when_empty.label"
+description_key = "settings.hide_when_empty.description"
+default = true
+
+[[service]]
+id = "update-service"
+entry = "v5/service.luau"
+
+[[widget]]
+id = "bar"
+entry = "v5/widget.luau"
+
+[[panel]]
+id = "details"
+entry = "v5/panel.luau"
+width = 520
+height = 320
+placement = "floating"
+position = "auto"
+open_near_click = true

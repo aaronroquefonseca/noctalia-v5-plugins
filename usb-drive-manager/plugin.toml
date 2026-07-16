@@ -1,0 +1,58 @@
+id = "aaronroquefonseca/usb-drive-manager"
+name = "USB Drive Manager"
+version = "0.1.0"
+min_noctalia = "5.0.0"
+author = "Aaron Roque Fonseca"
+license = "MIT"
+description = "Mount, open, unmount, and safely power off removable USB drives."
+tags = ["System", "Utility"]
+dependencies = ["udisks2", "util-linux", "python3"]
+icon = "usb"
+
+[[setting]]
+key = "file_manager"
+type = "string"
+label_key = "settings.file_manager.label"
+description_key = "settings.file_manager.description"
+default = "nautilus {path}"
+
+[[setting]]
+key = "hide_when_empty"
+type = "bool"
+label_key = "settings.hide_when_empty.label"
+description_key = "settings.hide_when_empty.description"
+default = true
+
+[[setting]]
+key = "show_notifications"
+type = "bool"
+label_key = "settings.show_notifications.label"
+default = true
+
+[[setting]]
+key = "refresh_seconds"
+type = "int"
+label_key = "settings.refresh_seconds.label"
+description_key = "settings.refresh_seconds.description"
+default = 5
+min = 2
+max = 60
+step = 1
+advanced = true
+
+[[service]]
+id = "device-service"
+entry = "v5/service.luau"
+
+[[widget]]
+id = "bar"
+entry = "v5/widget.luau"
+
+[[panel]]
+id = "devices"
+entry = "v5/panel.luau"
+width = 480
+height = 460
+placement = "floating"
+position = "auto"
+open_near_click = true

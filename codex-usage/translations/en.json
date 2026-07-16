@@ -1,0 +1,30 @@
+{
+  "settings": {
+    "panel_style": {
+      "label": "Bar appearance",
+      "description": "Choose how much information Codex Usage shows in the bar.",
+      "options": {
+        "full": "Codex and usage",
+        "usage": "Usage only",
+        "icon": "Icon only"
+      }
+    },
+    "display_mode": {
+      "label": "Usage values",
+      "description": "Choose which remaining-usage windows are shown.",
+      "options": {
+        "both": "Both windows",
+        "primary": "5-hour window",
+        "secondary": "Weekly window"
+      }
+    },
+    "refresh_interval": {
+      "label": "Refresh interval",
+      "description": "How often Codex usage is refreshed, in seconds."
+    },
+    "codex_path": {
+      "label": "Codex executable",
+      "description": "Optional path to the Codex executable. Leave blank to use PATH."
+    }
+  }
+}

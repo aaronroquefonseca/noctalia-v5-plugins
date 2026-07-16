@@ -1,0 +1,13 @@
+{
+  "settings.system_command.label": "Repository check command",
+  "settings.system_command.description": "Must output: package old-version -> new-version",
+  "settings.aur_command.label": "AUR check command",
+  "settings.aur_command.description": "Must output: package old-version -> new-version. Empty disables AUR checks.",
+  "settings.flatpak_enabled.label": "Check Flatpak updates",
+  "settings.update_command.label": "Update command",
+  "settings.update_command.description": "Launched when Update is pressed.",
+  "settings.refresh_interval.label": "Refresh interval",
+  "settings.refresh_interval.description": "Minutes between automatic checks.",
+  "settings.hide_when_empty.label": "Hide when up to date",
+  "settings.hide_when_empty.description": "Hide the bar widget when no updates are available."
+}

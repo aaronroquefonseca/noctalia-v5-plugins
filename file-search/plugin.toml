@@ -1,0 +1,63 @@
+id = "aaronroquefonseca/file-search"
+name = "File Search"
+version = "0.1.0"
+min_noctalia = "5.0.0"
+author = "Aaron Roque Fonseca"
+license = "MIT"
+description = "Search files and folders from Noctalia's launcher."
+tags = ["Productivity", "Launcher", "Utility"]
+dependencies = ["fd", "python3", "xdg-utils"]
+icon = "file-search"
+
+[[setting]]
+key = "search_roots"
+type = "string_list"
+label_key = "settings.search_roots.label"
+description_key = "settings.search_roots.description"
+default = ["~"]
+
+[[setting]]
+key = "show_hidden"
+type = "bool"
+label_key = "settings.show_hidden.label"
+description_key = "settings.show_hidden.description"
+default = false
+
+[[setting]]
+key = "max_results"
+type = "int"
+label_key = "settings.max_results.label"
+description_key = "settings.max_results.description"
+default = 80
+min = 10
+max = 500
+step = 10
+
+[[setting]]
+key = "directory_opener"
+type = "string"
+label_key = "settings.directory_opener.label"
+description_key = "settings.directory_opener.description"
+default = "nautilus {path}"
+
+[[setting]]
+key = "file_opener"
+type = "string"
+label_key = "settings.file_opener.label"
+description_key = "settings.file_opener.description"
+default = "xdg-open {path}"
+
+[[setting]]
+key = "fd_command"
+type = "string"
+label_key = "settings.fd_command.label"
+description_key = "settings.fd_command.description"
+default = "fd"
+advanced = true
+
+[[launcher_provider]]
+id = "files"
+entry = "file_search.luau"
+prefix = "/files"
+glyph = "file-search"
+include_in_global_search = false

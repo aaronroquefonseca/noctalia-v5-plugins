@@ -1,0 +1,14 @@
+{
+  "settings.search_roots.label": "Search folders",
+  "settings.search_roots.description": "Folders searched by fd. Tilde paths are supported.",
+  "settings.show_hidden.label": "Include hidden files",
+  "settings.show_hidden.description": "Search hidden files and folders; ignored paths remain excluded.",
+  "settings.max_results.label": "Maximum results",
+  "settings.max_results.description": "Maximum files and folders returned per search.",
+  "settings.directory_opener.label": "Folder opener",
+  "settings.directory_opener.description": "Command used for folders. {path} becomes the safely quoted folder path.",
+  "settings.file_opener.label": "File opener",
+  "settings.file_opener.description": "Command used for files. {path} becomes the safely quoted file path.",
+  "settings.fd_command.label": "fd command",
+  "settings.fd_command.description": "Executable or command used for searches."
+}

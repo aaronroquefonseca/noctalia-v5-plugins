@@ -1,0 +1,9 @@
+{
+  "settings.file_manager.label": "File manager",
+  "settings.file_manager.description": "Command used to open mounted drives. {path} becomes the safely quoted mount path.",
+  "settings.hide_when_empty.label": "Hide when empty",
+  "settings.hide_when_empty.description": "Hide the bar widget when no removable USB filesystem is connected.",
+  "settings.show_notifications.label": "Show action notifications",
+  "settings.refresh_seconds.label": "Device refresh interval",
+  "settings.refresh_seconds.description": "Seconds between removable-drive checks."
+}

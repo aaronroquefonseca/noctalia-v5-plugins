@@ -1,0 +1,38 @@
+id = "aaronroquefonseca/web-search"
+name = "Web Search"
+version = "0.1.0"
+min_noctalia = "5.0.0"
+author = "Aaron Roque Fonseca"
+license = "MIT"
+description = "Search the web from Noctalia's launcher using your default browser."
+tags = ["Utility", "Launcher"]
+dependencies = ["xdg-utils"]
+icon = "world-search"
+
+[[setting]]
+key = "search_engine"
+type = "select"
+label_key = "settings.search_engine.label"
+description_key = "settings.search_engine.description"
+default = "startpage"
+options = [
+  { value = "startpage", label_key = "settings.search_engine.options.startpage" },
+  { value = "google", label_key = "settings.search_engine.options.google" },
+  { value = "duckduckgo", label_key = "settings.search_engine.options.duckduckgo" },
+  { value = "custom", label_key = "settings.search_engine.options.custom" },
+]
+
+[[setting]]
+key = "custom_search_url"
+type = "string"
+label_key = "settings.custom_search_url.label"
+description_key = "settings.custom_search_url.description"
+default = "https://example.com/search?q={query}"
+visible_when = { key = "search_engine", values = ["custom"] }
+
+[[launcher_provider]]
+id = "web"
+entry = "web_search.luau"
+prefix = "/web"
+glyph = "world-search"
+include_in_global_search = false
