@@ -1,6 +1,6 @@
 id = "aaronroquefonseca/arch-updater"
 name = "Arch Updater"
-version = "0.1.1"
+version = "0.1.2"
 min_noctalia = "5.0.0"
 author = "Aaron Roque Fonseca"
 license = "MIT"
@@ -67,7 +67,7 @@ entry = "v5/widget.luau"
 id = "details"
 entry = "v5/panel.luau"
 width = 520
-height = 320
+height = 420
 placement = "floating"
 position = "auto"
 open_near_click = true
