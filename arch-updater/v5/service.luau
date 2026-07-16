@@ -59,14 +59,14 @@ local function launchUpdate()
     noctalia.notify("Arch Updater", "Update command is empty")
     return
   end
-  -- Terminal clients can exit after handing their window to an existing process.
-  -- Detach the configured command: its exit code does not represent the updater.
-  local detachedCommand = "nohup sh -c " .. quote(command) .. " >/dev/null 2>&1 &"
-  local started = noctalia.runAsync(detachedCommand, function(result)
-    if result.exitCode ~= 0 then
-      noctalia.notify("Arch Updater", "Could not launch updater")
+  local started = noctalia.runAsync(command, function(result)
+    if result.timedOut then
+      noctalia.notify("Arch Updater", "Updater timed out")
+    elseif result.exitCode ~= 0 then
+      noctalia.notify("Arch Updater", "Updater exited with code " .. tostring(result.exitCode))
     end
-  end, 5000)
+    refresh()
+  end, 86400000)
   if not started then noctalia.notify("Arch Updater", "Could not launch updater") end
 end
 
