@@ -2,8 +2,10 @@ local STATE_KEY = "updates"
 local REFRESH_KEY = "refresh_request"
 local UPDATE_KEY = "update_request"
 local busy = false
+local updateRunning = false
 local refreshToken = nil
 local updateToken = nil
+local setInterval
 
 local function quote(value)
   return "'" .. string.gsub(tostring(value or ""), "'", "'\\''") .. "'"
@@ -32,7 +34,7 @@ local function publishFailure(message)
 end
 
 local function refresh()
-  if busy then return end
+  if busy or updateRunning then return end
   busy = true
   local previous = noctalia.state.get(STATE_KEY) or { updates = {}, count = 0 }
   previous.loading = true
@@ -53,21 +55,59 @@ local function refresh()
   if not started then busy = false; publishFailure("Could not start update check") end
 end
 
+local function updateStatePath()
+  local directory = noctalia.pluginDataDir()
+  if directory == nil then return nil end
+  return directory .. "/update-state.json"
+end
+
+local function pollUpdate()
+  local path = updateStatePath()
+  if path == nil then return false end
+  local raw = noctalia.readFile(path)
+  if raw == nil then return false end
+  local status = noctalia.json.decode(raw)
+  if type(status) ~= "table" then return false end
+  if status.running == true then
+    updateRunning = true
+    setInterval()
+    return true
+  end
+  updateRunning = false
+  noctalia.removeFile(path)
+  setInterval()
+  local exitCode = tonumber(status.exitCode) or 1
+  if exitCode ~= 0 then
+    noctalia.notify("Arch Updater", "Updater exited with code " .. tostring(exitCode))
+  end
+  refresh()
+  return false
+end
+
 local function launchUpdate()
+  if updateRunning or pollUpdate() then
+    noctalia.notify("Arch Updater", "Updater is already running")
+    return
+  end
   local command = tostring(noctalia.getConfig("update_command") or "")
   if command == "" then
     noctalia.notify("Arch Updater", "Update command is empty")
     return
   end
-  local started = noctalia.runAsync(command, function(result)
-    if result.timedOut then
-      noctalia.notify("Arch Updater", "Updater timed out")
-    elseif result.exitCode ~= 0 then
-      noctalia.notify("Arch Updater", "Updater exited with code " .. tostring(result.exitCode))
-    end
-    refresh()
-  end, 86400000)
-  if not started then noctalia.notify("Arch Updater", "Could not launch updater") end
+  local path = updateStatePath()
+  if path == nil then noctalia.notify("Arch Updater", "Could not access plugin data"); return end
+  noctalia.writeFile(path, noctalia.json.encode({ running = true, startedAt = os.time() }))
+  local runner = noctalia.pluginDir() .. "/../update_runner.py"
+  local runnerCommand = "python3 " .. quote(runner) .. " --state " .. quote(path) .. " --command " .. quote(command)
+  updateRunning = true
+  setInterval()
+  local started = noctalia.runAsync(runnerCommand)
+  if not started then
+    updateRunning = false
+    noctalia.removeFile(path)
+    setInterval()
+    noctalia.notify("Arch Updater", "Could not launch updater")
+  end
 end
 
 noctalia.state.watch(REFRESH_KEY, function(value)
@@ -80,11 +120,14 @@ noctalia.state.watch(UPDATE_KEY, function(value)
   if token ~= nil and token ~= updateToken then updateToken = token; launchUpdate() end
 end)
 
-local function setInterval()
+setInterval = function()
+  if updateRunning then noctalia.setUpdateInterval(2000); return end
   local minutes = tonumber(noctalia.getConfig("refresh_interval_minutes")) or 120
   noctalia.setUpdateInterval(math.max(5, math.min(1440, minutes)) * 60000)
 end
 
-function update() refresh() end
+function update()
+  if updateRunning or noctalia.fileExists(updateStatePath() or "") then pollUpdate() else refresh() end
+end
 function onConfigChanged() setInterval(); refresh() end
-setInterval()
+if not pollUpdate() then setInterval() end
