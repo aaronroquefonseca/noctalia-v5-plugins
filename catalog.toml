@@ -15,7 +15,7 @@ tags = ["AI", "Development", "Utility"]
 [[plugin]]
 id = "aaronroquefonseca/arch-updater"
 name = "Arch Updater"
-version = "0.1.5"
+version = "0.1.6"
 author = "Aaron Roque Fonseca"
 license = "MIT"
 icon = "navigation-filled"

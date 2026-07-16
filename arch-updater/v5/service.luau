@@ -98,7 +98,9 @@ local function launchUpdate()
   if path == nil then noctalia.notify("Arch Updater", "Could not access plugin data"); return end
   noctalia.writeFile(path, noctalia.json.encode({ running = true, startedAt = os.time() }))
   local runner = noctalia.pluginDir() .. "/../update_runner.py"
-  local runnerCommand = "python3 " .. quote(runner) .. " --state " .. quote(path) .. " --command " .. quote(command)
+  local runnerCommand = "setsid --fork python3 " .. quote(runner)
+    .. " --state " .. quote(path) .. " --command " .. quote(command)
+    .. " >/dev/null 2>&1"
   updateRunning = true
   setInterval()
   local started = noctalia.runAsync(runnerCommand)
