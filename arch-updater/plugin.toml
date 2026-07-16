@@ -1,6 +1,6 @@
 id = "aaronroquefonseca/arch-updater"
 name = "Arch Updater"
-version = "0.1.7"
+version = "0.1.8"
 min_noctalia = "5.0.0"
 author = "Aaron Roque Fonseca"
 license = "MIT"
@@ -36,7 +36,7 @@ key = "update_command"
 type = "string"
 label_key = "settings.update_command.label"
 description_key = "settings.update_command.description"
-default = "ghostty --class=com.aaronroque.update-terminal -e sh -c 'topgrade; echo \"Done - Press enter to exit\"; read _'"
+default = "ghostty --class=com.aaronroque.update-terminal --gtk-single-instance=false --linux-cgroup=never -e sh -c 'topgrade; echo \"Done - Press enter to exit\"; read _'"
 
 [[setting]]
 key = "refresh_interval_minutes"

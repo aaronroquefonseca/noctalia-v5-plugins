@@ -56,9 +56,9 @@ local function refresh()
 end
 
 local function updateStatePath()
-  local directory = noctalia.pluginDataDir()
-  if directory == nil then return nil end
-  return directory .. "/update-state.json"
+  local directory = noctalia.getenv("XDG_RUNTIME_DIR")
+  if directory == nil or directory == "" then directory = "/tmp" end
+  return directory .. "/noctalia-arch-updater-state.json"
 end
 
 local function pollUpdate()
@@ -100,7 +100,7 @@ local function launchUpdate()
   local runner = noctalia.pluginDir() .. "/../update_runner.py"
   local unit = "noctalia-arch-updater-" .. tostring(os.time())
   local runnerCommand = "systemd-run --user --unit=" .. quote(unit)
-    .. " --collect --quiet --service-type=exec python3 " .. quote(runner)
+    .. " --collect --quiet --service-type=exec --property=ManagedOOMPreference=avoid python3 " .. quote(runner)
     .. " --state " .. quote(path) .. " --command " .. quote(command)
   updateRunning = true
   setInterval()
