@@ -31,7 +31,7 @@ local function render()
   else
     for index = 1, #updates do
       local item = updates[index]
-      table.insert(updateRows, ui.row({ key = "update-" .. index, gap = 8, align = "center", padding = 5 }, {
+      table.insert(updateRows, ui.row({ key = "update-" .. index, gap = 7, align = "center", padding = 7, fill = "surface_variant", radius = 7 }, {
         ui.label({ text = tostring(item.name or "?"), color = sourceColor(item.source), fontWeight = "semibold", flexGrow = 1, maxLines = 1 }),
         ui.label({ text = tostring(item.oldVersion or "?"), color = "on_surface_variant", fontSize = 11, maxLines = 1 }),
         ui.glyph({ name = "arrow-right", color = "on_surface_variant", size = 13 }),
@@ -48,10 +48,10 @@ local function render()
   }))
   table.insert(children, ui.row({ gap = 8 }, {
     ui.button({ text = "Refresh", glyph = "refresh", variant = "outline", enabled = not state.loading, flexGrow = 1, onClick = "onRefresh" }),
-    ui.button({ text = "Update", glyph = "navigation-filled", variant = "filled", enabled = not state.loading, flexGrow = 1, onClick = "onUpdate" }),
+    ui.button({ text = "Update", glyph = "navigation-filled", enabled = not state.loading, flexGrow = 1, onClick = "onUpdate" }),
     ui.button({ glyph = "close", variant = "ghost", onClick = "onClose" }),
   }))
-  panel.render(ui.column({ padding = 16, gap = 7, fill = "surface" }, children))
+  panel.render(ui.column({ padding = 16, gap = 7, fill = "surface", flexGrow = 1, align = "stretch" }, children))
 end
 
 noctalia.state.watch("updates", function(value)
