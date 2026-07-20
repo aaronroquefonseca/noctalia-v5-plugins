@@ -1,6 +1,6 @@
 id = "aaronroquefonseca/usb-drive-manager"
 name = "USB Drive Manager"
-version = "0.1.0"
+version = "0.1.1"
 plugin_api = 3
 min_noctalia = "5.0.0"
 author = "Aaron Roque Fonseca"

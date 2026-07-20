@@ -4,7 +4,7 @@ local sequence = 0
 
 local function render()
   local count = tonumber(state.count) or 0
-  local hidden = barWidget.getConfig("hide_when_empty") ~= false and count == 0 and not state.loading and state.ok ~= false
+  local hidden = noctalia.getConfig("hide_when_empty") ~= false and count == 0 and not state.loading and state.ok ~= false
   barWidget.setVisible(not hidden)
   barWidget.setGlyph("usb")
   barWidget.setText(state.loading and "…" or tostring(count))

@@ -4,7 +4,7 @@ local sequence = 0
 
 local function render()
   local count = tonumber(state.count) or 0
-  local hideWhenEmpty = barWidget.getConfig("hide_when_empty") ~= false
+  local hideWhenEmpty = noctalia.getConfig("hide_when_empty") ~= false
   local hidden = hideWhenEmpty and count == 0 and not state.loading and state.ok ~= false
   barWidget.setVisible(not hidden)
   barWidget.setGlyph("navigation-filled")

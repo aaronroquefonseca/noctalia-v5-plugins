@@ -24,8 +24,8 @@ local function render()
   local limits = type(state.rateLimits) == "table" and state.rateLimits or {}
   local primary = remaining(limits.primary)
   local secondary = remaining(limits.secondary)
-  local mode = tostring(barWidget.getConfig("display_mode") or "both")
-  local style = tostring(barWidget.getConfig("panel_style") or "full")
+  local mode = tostring(noctalia.getConfig("display_mode") or "both")
+  local style = tostring(noctalia.getConfig("panel_style") or "full")
   local values = valueText(mode, primary, secondary)
 
   local lowest = nil
