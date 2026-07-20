@@ -11,7 +11,10 @@ import tomllib
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 ENTRY_KINDS = ("service", "widget", "panel", "launcher_provider", "shortcut", "desktop_widget")
-CATALOG_FIELDS = ("id", "name", "version", "author", "license", "icon", "description", "min_noctalia", "tags")
+CATALOG_FIELDS = (
+    "id", "name", "version", "plugin_api", "author", "license", "icon",
+    "description", "min_noctalia", "tags",
+)
 
 
 def fail(message: str) -> None:
@@ -35,6 +38,8 @@ def main() -> int:
         for required in ("name", "version", "min_noctalia", "author"):
             if not manifest.get(required):
                 fail(f"{path}: missing {required}")
+        if not isinstance(manifest.get("plugin_api"), int) or manifest["plugin_api"] < 1:
+            fail(f"{path}: plugin_api must be a positive integer")
         for kind in ENTRY_KINDS:
             for entry in manifest.get(kind, []):
                 target = path.parent / entry["entry"]
