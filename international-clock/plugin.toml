@@ -1,0 +1,27 @@
+id = "aaronroquefonseca/international-clock"
+name = "International Clock"
+version = "0.1.0"
+plugin_api = 3
+min_noctalia = "5.0.0"
+author = "Aaron Roque Fonseca"
+license = "MIT"
+description = "Shows local Spain time and Ireland time in a Noctalia Control Center shortcut and panel."
+tags = ["Utility", "Productivity"]
+dependencies = ["coreutils"]
+icon = "clock"
+
+[[service]]
+id = "clock-service"
+entry = "service.luau"
+
+[[shortcut]]
+id = "ireland"
+entry = "shortcut.luau"
+
+[[panel]]
+id = "clocks"
+entry = "panel.luau"
+width = 440
+height = 380
+placement = "floating"
+position = "center"

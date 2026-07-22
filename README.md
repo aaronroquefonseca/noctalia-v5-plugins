@@ -13,6 +13,7 @@ This repository is a Noctalia plugin source: add the repository once, then enabl
 | Web Search | Launcher | Searches Startpage, Google, DuckDuckGo, or a custom engine in the default browser. | `xdg-utils` |
 | File Search | Launcher | Searches configured folders using `fd` and opens files or folders with configurable commands. | `fd`, `python3`, `xdg-utils` |
 | USB Drive Manager | Bar, panel, service | Mounts, opens, unmounts, and safely powers off removable USB filesystems. | `udisks2`, `util-linux`, `python3` |
+| International Clock | Control Center, panel, service | Shows local Spain time and DST-aware Ireland time. | `coreutils` |
 
 ## Install as a plugin source
 
@@ -30,6 +31,7 @@ aaronroquefonseca/arch-updater
 aaronroquefonseca/web-search
 aaronroquefonseca/file-search
 aaronroquefonseca/usb-drive-manager
+aaronroquefonseca/international-clock
 ```
 
 Update the source with:
@@ -74,6 +76,21 @@ Add `aaronroquefonseca/usb-drive-manager:bar` to a bar. Click to mount, open, un
 
 Safe removal unmounts every mounted filesystem on the parent disk before requesting UDisks power-off.
 
+### International Clock
+
+Add `aaronroquefonseca/international-clock:ireland` from **Settings → Control Center shortcuts**. The shortcut shows live Ireland time and opens a panel with local Spain time plus Ireland/Dublin time, UTC offsets, and timezone abbreviations.
+
+Ireland uses the IANA `Europe/Dublin` timezone, so GMT/Irish Standard Time changes follow the system timezone database automatically. Noctalia v5 does not expose plugin hooks for inserting content into its built-in clock/calendar panel; the native plugin shortcut is the supported Control Center integration point.
+
+For a second bar clock without the panel, Noctalia's built-in clock also accepts an IANA timezone:
+
+```toml
+[widget.ireland-clock]
+type = "clock"
+format = "{:%H:%M}"
+timezone = "Europe/Dublin"
+```
+
 ## Repository layout
 
 ```text
@@ -85,7 +102,8 @@ Safe removal unmounts every mounted filesystem on the parent disk before request
 ├── arch-updater/
 ├── web-search/
 ├── file-search/
-└── usb-drive-manager/
+├── usb-drive-manager/
+└── international-clock/
 ```
 
 Each plugin directory is self-contained and starts with `plugin.toml`. `catalog.toml` provides source-level discovery metadata; plugin manifests remain authoritative.

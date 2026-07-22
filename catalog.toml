@@ -26,6 +26,18 @@ min_noctalia = "5.0.0"
 tags = ["System", "Utility"]
 
 [[plugin]]
+id = "aaronroquefonseca/international-clock"
+name = "International Clock"
+version = "0.1.0"
+plugin_api = 3
+author = "Aaron Roque Fonseca"
+license = "MIT"
+icon = "clock"
+description = "Shows local Spain time and Ireland time in a Noctalia Control Center shortcut and panel."
+min_noctalia = "5.0.0"
+tags = ["Utility", "Productivity"]
+
+[[plugin]]
 id = "aaronroquefonseca/web-search"
 name = "Web Search"
 version = "0.1.0"
