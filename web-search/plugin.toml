@@ -1,6 +1,6 @@
 id = "aaronroquefonseca/web-search"
 name = "Web Search"
-version = "0.1.0"
+version = "0.1.1"
 plugin_api = 3
 min_noctalia = "5.0.0"
 author = "Aaron Roque Fonseca"
@@ -34,6 +34,6 @@ visible_when = { key = "search_engine", values = ["custom"] }
 [[launcher_provider]]
 id = "web"
 entry = "web_search.luau"
-prefix = "/web"
+prefix = "web"
 glyph = "world-search"
 include_in_global_search = false
