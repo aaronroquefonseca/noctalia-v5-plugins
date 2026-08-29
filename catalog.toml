@@ -40,7 +40,7 @@ tags = ["Utility", "Productivity"]
 [[plugin]]
 id = "aaronroquefonseca/web-search"
 name = "Web Search"
-version = "0.1.0"
+version = "0.1.1"
 plugin_api = 3
 author = "Aaron Roque Fonseca"
 license = "MIT"
@@ -52,7 +52,7 @@ tags = ["Utility", "Launcher"]
 [[plugin]]
 id = "aaronroquefonseca/file-search"
 name = "File Search"
-version = "0.1.0"
+version = "0.1.1"
 plugin_api = 3
 author = "Aaron Roque Fonseca"
 license = "MIT"
