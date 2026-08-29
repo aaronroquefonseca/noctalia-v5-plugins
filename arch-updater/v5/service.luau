@@ -11,6 +11,13 @@ local function quote(value)
   return "'" .. string.gsub(tostring(value or ""), "'", "'\\''") .. "'"
 end
 
+local function trim(value)
+  local text = tostring(value or "")
+  text = string.gsub(text, "^%s+", "")
+  text = string.gsub(text, "%s+$", "")
+  return text
+end
+
 local function parseArch(output, source)
   local updates = {}
   for line in string.gmatch(tostring(output or ""), "[^\r\n]+") do
@@ -32,8 +39,8 @@ local function parseFlatpak(output)
   local updates = {}
   for line in string.gmatch(tostring(output or ""), "[^\r\n]+") do
     local app, version = string.match(line, "^([^\t]+)\t?(.*)$")
-    app = app and noctalia.string.trim(app) or nil
-    version = version and noctalia.string.trim(version) or ""
+    app = app and trim(app) or nil
+    version = trim(version)
     if app and app ~= "" then
       table.insert(updates, {
         id = app,
@@ -65,6 +72,8 @@ local function refresh()
 
   local previous = noctalia.state.get(STATE_KEY) or { updates = {}, count = 0 }
   previous.loading = true
+  previous.error = nil
+  previous.warnings = {}
   noctalia.state.set(STATE_KEY, previous)
 
   local updates = {}
@@ -111,12 +120,12 @@ local function refresh()
       elseif flatpak then
         if code ~= 0 then table.insert(warnings, source .. " check exited with code " .. tostring(code)) end
       elseif code ~= 0 and code ~= 1 and code ~= 2 and #parsed == 0 then
-        local detail = noctalia.string.trim(tostring(result.stderr or ""))
+        local detail = trim(result.stderr)
         table.insert(warnings, detail ~= "" and detail or (source .. " check exited with code " .. tostring(code)))
       end
       pending = pending - 1
       finish()
-    end, timeout or 120000)
+    end, timeout or 45000)
 
     if not started then
       table.insert(warnings, "Could not start " .. source .. " update check")
@@ -124,10 +133,10 @@ local function refresh()
     end
   end
 
-  launch("system", tostring(noctalia.getConfig("system_command") or ""), parseArch, 120000, false)
-  launch("aur", tostring(noctalia.getConfig("aur_command") or ""), parseArch, 120000, false)
+  launch("system", tostring(noctalia.getConfig("system_command") or ""), parseArch, 45000, false)
+  launch("aur", tostring(noctalia.getConfig("aur_command") or ""), parseArch, 45000, false)
   if noctalia.getConfig("flatpak_enabled") ~= false and noctalia.commandExists("flatpak") then
-    launch("flatpak", "flatpak remote-ls --updates --columns=application,version 2>/dev/null", parseFlatpak, 120000, true)
+    launch("flatpak", "flatpak remote-ls --updates --columns=application,version 2>/dev/null", parseFlatpak, 45000, true)
   end
   finish()
 end
