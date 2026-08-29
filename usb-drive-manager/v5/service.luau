@@ -10,7 +10,7 @@ local function quote(value)
 end
 
 local function helper()
-  return noctalia.pluginDir() .. "/../usb_manager.py"
+  return noctalia.pluginDir() .. "/usb_manager.py"
 end
 
 local function publishFailure(message)

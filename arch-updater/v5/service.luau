@@ -12,7 +12,7 @@ local function quote(value)
 end
 
 local function helperCommand()
-  local helper = noctalia.pluginDir() .. "/../update_check.py"
+  local helper = noctalia.pluginDir() .. "/update_check.py"
   local systemCommand = tostring(noctalia.getConfig("system_command") or "")
   local aurCommand = tostring(noctalia.getConfig("aur_command") or "")
   local flatpak = noctalia.getConfig("flatpak_enabled") ~= false
@@ -97,7 +97,7 @@ local function launchUpdate()
   local path = updateStatePath()
   if path == nil then noctalia.notify("Arch Updater", "Could not access plugin data"); return end
   noctalia.writeFile(path, noctalia.json.encode({ running = true, startedAt = os.time() }))
-  local runner = noctalia.pluginDir() .. "/../update_runner.py"
+  local runner = noctalia.pluginDir() .. "/update_runner.py"
   local unit = "noctalia-arch-updater-" .. tostring(os.time())
   local runnerCommand = "systemd-run --user --unit=" .. quote(unit)
     .. " --collect --quiet --service-type=exec --property=ManagedOOMPreference=avoid python3 " .. quote(runner)

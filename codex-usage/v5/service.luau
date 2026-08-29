@@ -35,7 +35,7 @@ local function refresh()
   previous.loading = true
   publish(previous)
 
-  local helper = noctalia.pluginDir() .. "/../codex_usage.py"
+  local helper = noctalia.pluginDir() .. "/codex_usage.py"
   local command = "python3 " .. quote(helper)
   local codexPath = tostring(noctalia.getConfig("codex_path") or "")
   if codexPath ~= "" then
