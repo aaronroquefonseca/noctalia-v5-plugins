@@ -37,7 +37,7 @@ local function render()
   elseif lowest and lowest <= 25 then color = "tertiary" end
 
   local children = {
-    ui.image({ key = "logo", path = "../icons/openai.svg", width = 16, height = 16, fit = "contain" }),
+    ui.image({ key = "logo", path = noctalia.pluginDir() .. "/icons/openai.svg", width = 16, height = 16, fit = "contain" }),
   }
   if style ~= "icon" then
     local text = style == "usage" and values or ("Codex " .. values)
