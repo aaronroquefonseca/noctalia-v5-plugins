@@ -1,6 +1,6 @@
 id = "aaronroquefonseca/file-search"
 name = "File Search"
-version = "0.1.0"
+version = "0.1.1"
 plugin_api = 3
 min_noctalia = "5.0.0"
 author = "Aaron Roque Fonseca"
@@ -59,6 +59,6 @@ advanced = true
 [[launcher_provider]]
 id = "files"
 entry = "file_search.luau"
-prefix = "/files"
+prefix = "files"
 glyph = "file-search"
 include_in_global_search = false
