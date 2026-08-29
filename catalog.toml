@@ -4,7 +4,7 @@
 [[plugin]]
 id = "aaronroquefonseca/codex-usage"
 name = "Codex Usage"
-version = "0.2.1"
+version = "0.2.2"
 plugin_api = 8
 author = "Aaron Roque Fonseca"
 license = "MIT"
@@ -16,7 +16,7 @@ tags = ["AI", "Development", "Utility"]
 [[plugin]]
 id = "aaronroquefonseca/arch-updater"
 name = "Arch Updater"
-version = "0.2.1"
+version = "0.2.2"
 plugin_api = 8
 author = "Aaron Roque Fonseca"
 license = "MIT"
