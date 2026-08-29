@@ -1,6 +1,6 @@
 id = "aaronroquefonseca/arch-updater"
 name = "Arch Updater"
-version = "0.2.1"
+version = "0.2.2"
 plugin_api = 8
 min_noctalia = "5.0.0"
 author = "Aaron Roque Fonseca"
