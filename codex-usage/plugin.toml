@@ -1,6 +1,6 @@
 id = "aaronroquefonseca/codex-usage"
 name = "Codex Usage"
-version = "0.2.1"
+version = "0.2.2"
 plugin_api = 8
 min_noctalia = "5.0.0"
 author = "Aaron Roque Fonseca"
@@ -63,7 +63,7 @@ entry = "v5/widget.luau"
 id = "details"
 entry = "v5/panel.luau"
 width = 430
-height = 500
+height = 390
 placement = "attached"
 position = "auto"
 open_near_click = true
