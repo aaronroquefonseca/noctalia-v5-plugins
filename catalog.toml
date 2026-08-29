@@ -4,8 +4,8 @@
 [[plugin]]
 id = "aaronroquefonseca/codex-usage"
 name = "Codex Usage"
-version = "0.2.0"
-plugin_api = 3
+version = "0.2.1"
+plugin_api = 8
 author = "Aaron Roque Fonseca"
 license = "MIT"
 icon = "code"
@@ -16,8 +16,8 @@ tags = ["AI", "Development", "Utility"]
 [[plugin]]
 id = "aaronroquefonseca/arch-updater"
 name = "Arch Updater"
-version = "0.2.0"
-plugin_api = 3
+version = "0.2.1"
+plugin_api = 8
 author = "Aaron Roque Fonseca"
 license = "MIT"
 icon = "navigation-filled"
@@ -64,8 +64,8 @@ tags = ["Productivity", "Launcher", "Utility"]
 [[plugin]]
 id = "aaronroquefonseca/usb-drive-manager"
 name = "USB Drive Manager"
-version = "0.2.0"
-plugin_api = 3
+version = "0.2.1"
+plugin_api = 8
 author = "Aaron Roque Fonseca"
 license = "MIT"
 icon = "usb"
