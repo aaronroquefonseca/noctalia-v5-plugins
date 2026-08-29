@@ -1,6 +1,6 @@
 id = "aaronroquefonseca/usb-drive-manager"
 name = "USB Drive Manager"
-version = "0.1.2"
+version = "0.2.0"
 plugin_api = 3
 min_noctalia = "5.0.0"
 author = "Aaron Roque Fonseca"
@@ -52,8 +52,9 @@ entry = "v5/widget.luau"
 [[panel]]
 id = "devices"
 entry = "v5/panel.luau"
-width = 480
-height = 460
-placement = "floating"
+width = 460
+height = 500
+placement = "attached"
 position = "auto"
 open_near_click = true
+dismiss_on_outside_click = true

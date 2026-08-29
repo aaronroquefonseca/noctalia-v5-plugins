@@ -6,10 +6,16 @@ local function render()
   local count = tonumber(state.count) or 0
   local hidden = noctalia.getConfig("hide_when_empty") ~= false and count == 0 and not state.loading and state.ok ~= false
   barWidget.setVisible(not hidden)
-  barWidget.setGlyph("usb")
-  barWidget.setText(state.loading and "…" or tostring(count))
+
+  local color = state.ok == false and "error" or (count > 0 and "primary" or "on_surface_variant")
+  local children = {
+    ui.glyph({ name = "usb", size = 14, color = color }),
+    ui.label({ text = state.loading and "…" or tostring(count), fontSize = 11, fontWeight = "semibold", color = color, maxLines = 1 }),
+  }
+  if state.ok == false then table.insert(children, ui.glyph({ name = "alert-circle", size = 11, color = "error" })) end
+  barWidget.render(ui.row({ gap = 5, align = "center" }, children))
   barWidget.setTooltip({
-    { key = "USB drives", value = state.loading and "Refreshing…" or tostring(count) },
+    { key = "USB drives", value = state.loading and "Refreshing…" or (tostring(count) .. " removable") },
     { key = "Status", value = state.ok == false and tostring(state.error or "Unavailable") or "Click to manage" },
   })
 end

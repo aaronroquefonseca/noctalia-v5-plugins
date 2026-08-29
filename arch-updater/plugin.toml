@@ -1,13 +1,13 @@
 id = "aaronroquefonseca/arch-updater"
 name = "Arch Updater"
-version = "0.1.10"
+version = "0.2.0"
 plugin_api = 3
 min_noctalia = "5.0.0"
 author = "Aaron Roque Fonseca"
 license = "MIT"
 description = "Shows Arch, AUR, and Flatpak updates and launches your updater."
 tags = ["System", "Utility"]
-dependencies = ["pacman-contrib"]
+dependencies = ["pacman-contrib", "python3"]
 icon = "navigation-filled"
 
 [[setting]]
@@ -67,8 +67,9 @@ entry = "v5/widget.luau"
 [[panel]]
 id = "details"
 entry = "v5/panel.luau"
-width = 520
-height = 420
-placement = "floating"
+width = 460
+height = 520
+placement = "attached"
 position = "auto"
 open_near_click = true
+dismiss_on_outside_click = true

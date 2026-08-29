@@ -3,13 +3,19 @@ local view = "usage"
 local seq = 0
 local icon = noctalia.pluginDir() .. "/icons/openai.svg"
 
+local function clamp(value)
+  return math.max(0, math.min(100, value))
+end
+
 local function rem(w)
   if type(w) ~= "table" or type(w.usedPercent) ~= "number" then return nil end
-  return math.max(0, math.min(100, 100 - w.usedPercent))
+  return clamp(100 - w.usedPercent)
 end
 
 local function name(m)
   if type(m) ~= "number" then return "Usage window" end
+  if m == 300 then return "5-hour session" end
+  if m == 10080 then return "Weekly window" end
   if m % 10080 == 0 then return (m / 10080) .. "-week window" end
   if m % 1440 == 0 then return (m / 1440) .. "-day window" end
   if m % 60 == 0 then return (m / 60) .. "-hour window" end
@@ -22,7 +28,22 @@ local function resetText(t)
   if d < 60 then return "Resets in less than a minute" end
   if d < 3600 then return "Resets in " .. math.ceil(d / 60) .. " min" end
   if d < 86400 then return "Resets in " .. math.floor(d / 3600) .. "h " .. math.ceil((d % 3600) / 60) .. "m" end
-  return "Resets " .. noctalia.formatTime("%a %H:%M", t)
+  return "Resets in " .. math.floor(d / 86400) .. "d " .. math.floor((d % 86400) / 3600) .. "h"
+end
+
+local function pace(w)
+  if type(w) ~= "table" or type(w.usedPercent) ~= "number" or type(w.resetsAt) ~= "number" then return nil end
+  local minutes = tonumber(w.windowDurationMins) or tonumber(w.windowMinutes)
+  if not minutes or minutes <= 0 then return nil end
+  local duration = minutes * 60
+  local startAt = w.resetsAt - duration
+  local elapsed = clamp(((os.time() - startAt) / duration) * 100)
+  local delta = w.usedPercent - elapsed
+  if math.abs(delta) < 2 then return "On even pace", "on_surface_variant" end
+  if delta > 0 then
+    return tostring(math.floor(delta + 0.5)) .. "pts over even pace", delta >= 25 and "error" or "tertiary"
+  end
+  return tostring(math.floor(math.abs(delta) + 0.5)) .. "pts under even pace", "secondary"
 end
 
 local function sev(v)
@@ -34,13 +55,20 @@ end
 
 local function card(w, k)
   local v = rem(w)
-  return ui.column({ key = k, fill = "surface_variant", radius = 12, padding = 12, gap = 7 }, {
+  local paceText, paceColor = pace(w)
+  local footer = {
+    ui.label({ text = resetText(w.resetsAt), color = "on_surface_variant", fontSize = 11, flexGrow = 1 }),
+  }
+  if paceText then
+    table.insert(footer, ui.label({ text = paceText, color = paceColor, fontSize = 11, fontWeight = "semibold" }))
+  end
+  return ui.column({ key = k, fill = "surface_variant", radius = 12, padding = 12, gap = 8 }, {
     ui.row({ justify = "space_between", align = "center" }, {
-      ui.label({ text = name(w.windowDurationMins), fontWeight = "semibold", flexGrow = 1 }),
-      ui.label({ text = v and v .. "%" or "—", color = sev(v), fontSize = 18, fontWeight = "bold" }),
+      ui.label({ text = name(tonumber(w.windowDurationMins) or tonumber(w.windowMinutes)), fontWeight = "semibold", flexGrow = 1 }),
+      ui.label({ text = v and tostring(math.floor(v + 0.5)) .. "% left" or "—", color = sev(v), fontSize = 14, fontWeight = "bold" }),
     }),
-    ui.label({ text = resetText(w.resetsAt), color = "on_surface_variant", fontSize = 12 }),
-    ui.progress({ progress = v and v / 100 or 0, fill = sev(v), track = "outline/0.35", height = 6, radius = 3 }),
+    ui.progress({ progress = v and v / 100 or 0, fill = sev(v), track = "on_surface/0.14", height = 8, radius = 8 }),
+    ui.row({ justify = "space_between", align = "center", gap = 8 }, footer),
   })
 end
 
@@ -64,76 +92,81 @@ local function expiry(t)
   return "Expires " .. noctalia.formatTime("%H:%M on %d %b %Y", t)
 end
 
+local function header(title, subtitle, withBack)
+  local left = {}
+  if withBack then
+    table.insert(left, ui.button({ glyph = "chevron-left", variant = "ghost", onClick = "onBack" }))
+  else
+    table.insert(left, ui.row({ width = 36, height = 36, radius = 10, fill = "primary/0.14", align = "center", justify = "center" }, {
+      ui.image({ path = icon, width = 19, height = 19, fit = "contain" }),
+    }))
+  end
+  table.insert(left, ui.column({ gap = 1, flexGrow = 1 }, {
+    ui.label({ text = title, fontSize = 18, fontWeight = "bold", maxLines = 1 }),
+    ui.label({ text = subtitle, color = "on_surface_variant", fontSize = 11, maxLines = 1 }),
+  }))
+  return ui.row({ gap = 10, align = "center" }, {
+    ui.row({ gap = 8, align = "center", flexGrow = 1 }, left),
+    ui.button({ glyph = "refresh", variant = "ghost", enabled = not state.loading, onClick = "onRefresh" }),
+    ui.button({ glyph = "close", variant = "ghost", onClick = "onClose" }),
+  })
+end
+
 local function renderUsage()
   local l = type(state.rateLimits) == "table" and state.rateLimits or {}
   local c = type(l.credits) == "table" and l.credits or {}
   local _, n = resets()
   local body = {}
-  local ch = {
-    ui.row({ gap = 10, align = "center" }, {
-      ui.image({ path = icon, width = 22, height = 22 }),
-      ui.label({ text = "Codex usage", fontSize = 19, fontWeight = "bold", flexGrow = 1 }),
-      ui.label({ text = tostring(l.planType or ""), color = "on_surface_variant", fontSize = 12 }),
-    }),
-    ui.separator({ color = "outline/0.4" }),
-  }
+  local subtitle = tostring(l.planType or "Codex")
+  if state.updatedAt then subtitle = subtitle .. " · updated " .. noctalia.formatTime("%H:%M", state.updatedAt) end
+  local ch = { header("Codex usage", subtitle, false), ui.separator({ color = "outline/0.25" }) }
 
   if state.ok == false then
-    table.insert(body, ui.label({ text = tostring(state.error or "Unable to read Codex usage"), color = "error", maxLines = 4 }))
+    table.insert(body, ui.row({ fill = "error/0.10", radius = 10, padding = 10, gap = 8, align = "center" }, {
+      ui.glyph({ name = "alert-circle", size = 15, color = "error" }),
+      ui.label({ text = tostring(state.error or "Unable to read Codex usage"), color = "error", maxLines = 3 }),
+    }))
   end
   if l.primary then table.insert(body, card(l.primary, "primary")) end
   if l.secondary then table.insert(body, card(l.secondary, "secondary")) end
+
   table.insert(body, ui.row({ gap = 10, align = "stretch" }, {
-    ui.column({ flexGrow = 1, fill = "surface_variant", radius = 12, padding = 10, align = "center" }, {
+    ui.column({ flexGrow = 1, fill = "surface_variant", radius = 12, padding = 10, align = "center", justify = "center" }, {
       ui.label({ text = c.unlimited and "∞" or tostring(c.balance or "—"), fontSize = 17, fontWeight = "bold" }),
-      ui.label({ text = "Credits", color = "on_surface_variant", fontSize = 12 }),
+      ui.label({ text = "Credits", color = "on_surface_variant", fontSize = 11 }),
     }),
-    ui.button({ text = n .. "  Limit resets", glyph = "chevron-right", variant = "outline", flexGrow = 1, onClick = "onResets" }),
+    ui.button({ text = tostring(n) .. "  Limit resets", glyph = "chevron-right", variant = "outline", flexGrow = 1, onClick = "onResets" }),
   }))
 
   table.insert(ch, ui.scroll({ flexGrow = 1, gap = 10 }, body))
-  table.insert(ch, ui.separator({ color = "outline/0.4" }))
-  table.insert(ch, ui.label({
-    text = state.loading and "Refreshing…" or (state.updatedAt and "Updated at " .. noctalia.formatTime("%H:%M", state.updatedAt) or "Not updated yet"),
-    color = "on_surface_variant",
-    fontSize = 12,
-  }))
-  table.insert(ch, ui.row({ gap = 8 }, {
-    ui.button({ text = "Refresh", glyph = "refresh", variant = "outline", enabled = not state.loading, flexGrow = 1, onClick = "onRefresh" }),
-    ui.button({ text = "Close", glyph = "close", variant = "ghost", onClick = "onClose" }),
-  }))
-
-  panel.render(ui.column({ padding = 16, gap = 10, fill = "surface", flexGrow = 1, align = "stretch" }, ch))
+  panel.render(ui.column({ padding = 14, gap = 10, fill = "surface", flexGrow = 1, align = "stretch" }, ch))
 end
 
 local function renderResets()
   local a, n = resets()
   local rows = {}
   local ch = {
-    ui.row({ gap = 8, align = "center" }, {
-      ui.button({ glyph = "chevron-left", variant = "ghost", onClick = "onBack" }),
-      ui.label({ text = "Limit resets", fontSize = 19, fontWeight = "bold", flexGrow = 1 }),
-      ui.label({ text = tostring(n), color = "on_surface_variant" }),
-    }),
-    ui.separator({ color = "outline/0.4" }),
-    ui.label({ text = n .. " usage limit resets available.", fontWeight = "semibold" }),
+    header("Limit resets", tostring(n) .. " available", true),
+    ui.separator({ color = "outline/0.25" }),
   }
 
   for i, c in ipairs(a) do
-    table.insert(rows, ui.column({ key = "r" .. i, fill = "surface_variant", radius = 10, padding = 8, gap = 2 }, {
+    table.insert(rows, ui.column({ key = "r" .. i, fill = "surface_variant", radius = 10, padding = 10, gap = 3 }, {
       ui.label({ text = tostring(c.title or "Full reset"), fontWeight = "semibold" }),
-      ui.label({ text = expiry(c.expiresAt), color = "on_surface_variant", fontSize = 12 }),
+      ui.label({ text = expiry(c.expiresAt), color = "on_surface_variant", fontSize = 11 }),
     }))
   end
   if n == 0 then
-    table.insert(rows, ui.label({ text = "No usage limit resets available.", color = "on_surface_variant" }))
+    table.insert(rows, ui.column({ align = "center", justify = "center", flexGrow = 1, gap = 8 }, {
+      ui.glyph({ name = "refresh", size = 32, color = "on_surface_variant" }),
+      ui.label({ text = "No usage limit resets available", color = "on_surface_variant" }),
+    }))
   elseif n > #a then
-    table.insert(rows, ui.label({ text = "Some expiration details are unavailable.", color = "on_surface_variant", fontSize = 12 }))
+    table.insert(rows, ui.label({ text = "Some expiration details are unavailable.", color = "on_surface_variant", fontSize = 11 }))
   end
 
   table.insert(ch, ui.scroll({ flexGrow = 1, gap = 8 }, rows))
-  table.insert(ch, ui.button({ text = "Close", glyph = "close", variant = "outline", onClick = "onClose" }))
-  panel.render(ui.column({ padding = 14, gap = 8, fill = "surface", flexGrow = 1, align = "stretch" }, ch))
+  panel.render(ui.column({ padding = 14, gap = 10, fill = "surface", flexGrow = 1, align = "stretch" }, ch))
 end
 
 local function render()

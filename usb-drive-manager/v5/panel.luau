@@ -51,15 +51,17 @@ local function deviceCard(device, index)
     table.insert(buttons, ui.button({ text = "Mount", glyph = "plug-connected", flexGrow = 1, onClick = "onMount" .. index }))
   end
   table.insert(buttons, ui.button({ glyph = "player-eject", variant = "outline", onClick = "onEject" .. index }))
-  return ui.column({ key = tostring(device.path), fill = "surface_variant", radius = 10, padding = 10, gap = 6 }, {
-    ui.row({ gap = 8, align = "center" }, {
-      ui.glyph({ name = "usb", color = device.mounted and "primary" or "on_surface_variant", size = 20 }),
+  return ui.column({ key = tostring(device.path), fill = "surface_variant", radius = 11, padding = 11, gap = 7 }, {
+    ui.row({ gap = 9, align = "center" }, {
+      ui.row({ width = 34, height = 34, radius = 9, fill = (device.mounted and "primary" or "on_surface") .. "/0.10", align = "center", justify = "center" }, {
+        ui.glyph({ name = "usb", color = device.mounted and "primary" or "on_surface_variant", size = 19 }),
+      }),
       ui.column({ flexGrow = 1, gap = 2 }, {
         ui.label({ text = title, fontWeight = "semibold", maxLines = 1 }),
         ui.label({ text = details, color = "on_surface_variant", fontSize = 11, maxLines = 1 }),
       }),
     }),
-    ui.label({ text = status, color = "on_surface_variant", fontSize = 11, maxLines = 1 }),
+    ui.label({ text = status, color = device.mounted and "primary" or "on_surface_variant", fontSize = 11, maxLines = 1 }),
     ui.row({ gap = 7 }, buttons),
   })
 end
@@ -67,27 +69,39 @@ end
 local function render()
   slots = {}
   local devices = type(state.devices) == "table" and state.devices or {}
+  local count = tonumber(state.count) or #devices
   local cards = {}
   for index = 1, math.min(#devices, 12) do table.insert(cards, deviceCard(devices[index], index)) end
   if #cards == 0 then
-    cards[1] = ui.column({ align = "center", justify = "center", gap = 8, flexGrow = 1 }, {
-      ui.glyph({ name = "usb", size = 38, color = "on_surface_variant" }),
+    cards[1] = ui.column({ align = "center", justify = "center", gap = 9, flexGrow = 1 }, {
+      ui.glyph({ name = "usb", size = 36, color = "on_surface_variant" }),
       ui.label({ text = state.loading and "Checking for USB drives…" or "No removable USB drives", color = "on_surface_variant" }),
     })
   end
+
+  local subtitle = state.loading and "Scanning removable storage…" or (tostring(count) .. (count == 1 and " removable drive" or " removable drives"))
   local children = {
-    ui.row({ gap = 8, align = "center" }, {
-      ui.glyph({ name = "usb", color = "primary", size = 22 }),
-      ui.label({ text = "USB drives", fontSize = 19, fontWeight = "bold", flexGrow = 1 }),
-      ui.label({ text = tostring(tonumber(state.count) or #devices), color = "on_surface_variant" }),
+    ui.row({ gap = 10, align = "center" }, {
+      ui.row({ width = 36, height = 36, radius = 10, fill = "primary/0.14", align = "center", justify = "center" }, {
+        ui.glyph({ name = "usb", color = "primary", size = 20 }),
+      }),
+      ui.column({ flexGrow = 1, gap = 1 }, {
+        ui.label({ text = "USB drives", fontSize = 18, fontWeight = "bold", maxLines = 1 }),
+        ui.label({ text = subtitle, color = "on_surface_variant", fontSize = 11, maxLines = 1 }),
+      }),
       ui.button({ glyph = "refresh", variant = "ghost", enabled = not state.loading, onClick = "onRefresh" }),
       ui.button({ glyph = "close", variant = "ghost", onClick = "onClose" }),
     }),
-    ui.separator({ color = "outline/0.4" }),
+    ui.separator({ color = "outline/0.25" }),
   }
-  if state.ok == false then table.insert(children, ui.label({ text = tostring(state.error or "Device query failed"), color = "error", maxLines = 3 })) end
+  if state.ok == false then
+    table.insert(children, ui.row({ fill = "error/0.10", radius = 10, padding = 9, gap = 8, align = "center" }, {
+      ui.glyph({ name = "alert-circle", size = 14, color = "error" }),
+      ui.label({ text = tostring(state.error or "Device query failed"), color = "error", fontSize = 11, maxLines = 3 }),
+    }))
+  end
   table.insert(children, ui.scroll({ flexGrow = 1, gap = 8 }, cards))
-  panel.render(ui.column({ padding = 14, gap = 9, fill = "surface" }, children))
+  panel.render(ui.column({ padding = 14, gap = 10, fill = "surface", flexGrow = 1, align = "stretch" }, children))
 end
 
 noctalia.state.watch("devices", function(value)

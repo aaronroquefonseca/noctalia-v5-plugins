@@ -7,11 +7,22 @@ local function render()
   local hideWhenEmpty = noctalia.getConfig("hide_when_empty") ~= false
   local hidden = hideWhenEmpty and count == 0 and not state.loading and state.ok ~= false
   barWidget.setVisible(not hidden)
-  barWidget.setGlyph("navigation-filled")
-  barWidget.setText(state.loading and "…" or tostring(count))
+
+  local color = "on_surface"
+  if state.ok == false then color = "error"
+  elseif count > 0 then color = state.noctaliaUpdate and "tertiary" or "primary" end
+
+  local children = {
+    ui.glyph({ name = "navigation-filled", size = 14, color = color }),
+    ui.label({ text = state.loading and "…" or tostring(count), fontSize = 11, fontWeight = "semibold", color = color, maxLines = 1 }),
+  }
+  if state.ok == false then
+    table.insert(children, ui.glyph({ name = "alert-circle", size = 11, color = "error" }))
+  end
+  barWidget.render(ui.row({ gap = 5, align = "center" }, children))
   barWidget.setTooltip({
-    { key = "Updates", value = state.loading and "Refreshing…" or tostring(count) },
-    { key = "Status", value = state.ok == false and tostring(state.error or "Unavailable") or "Click for details" },
+    { key = "Updates", value = state.loading and "Refreshing…" or (tostring(count) .. " available") },
+    { key = "Status", value = state.ok == false and tostring(state.error or "Unavailable") or (state.noctaliaUpdate and "Noctalia update available" or "Click for details") },
   })
 end
 
