@@ -1,13 +1,14 @@
 # Noctalia Codex Usage — v5
 
-Native, Quickshell-free Noctalia v5 plugin showing the remaining OpenAI Codex 5-hour and weekly usage limits.
+Native, Quickshell-free Noctalia v5 plugin showing the remaining OpenAI Codex 5-hour, weekly, and seven-day Luna Reserve usage limits.
 
 ## Features
 
 - Native Noctalia v5 Luau service, bar widget, and panel
 - Full, usage-only, and icon-only bar modes
 - Both limits, 5-hour only, or weekly only
-- Remaining-usage meters and reset times
+- Remaining-usage meters, reset times, and over/under even-pace indicators
+- Seven-day Luna Reserve allowance when available
 - Credits and expandable usage-limit reset details with expiration dates
 - Automatic and manual refresh
 - Optional custom Codex executable path

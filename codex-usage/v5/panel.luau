@@ -53,7 +53,7 @@ local function sev(v)
   return "primary"
 end
 
-local function card(w, k)
+local function card(w, k, title)
   local v = rem(w)
   local paceText, paceColor = pace(w)
   local footer = {
@@ -64,12 +64,21 @@ local function card(w, k)
   end
   return ui.column({ key = k, fill = "surface_variant", radius = 12, padding = 12, gap = 8 }, {
     ui.row({ justify = "space_between", align = "center" }, {
-      ui.label({ text = name(tonumber(w.windowDurationMins) or tonumber(w.windowMinutes)), fontWeight = "semibold", flexGrow = 1 }),
+      ui.label({ text = title or name(tonumber(w.windowDurationMins) or tonumber(w.windowMinutes)), fontWeight = "semibold", flexGrow = 1 }),
       ui.label({ text = v and tostring(math.floor(v + 0.5)) .. "% left" or "—", color = sev(v), fontSize = 14, fontWeight = "bold" }),
     }),
     ui.progress({ progress = v and v / 100 or 0, fill = sev(v), track = "on_surface/0.14", height = 8, radius = 8 }),
     ui.row({ justify = "space_between", align = "center", gap = 8 }, footer),
   })
+end
+
+local function lunaWindow()
+  for _, limit in ipairs(type(state.additionalRateLimits) == "table" and state.additionalRateLimits or {}) do
+    if type(limit) == "table" and limit.limitId == "base_model_inference" then
+      return limit.primary or limit.secondary
+    end
+  end
+  return nil
 end
 
 local function resets()
@@ -129,6 +138,8 @@ local function renderUsage()
   end
   if l.primary then table.insert(body, card(l.primary, "primary")) end
   if l.secondary then table.insert(body, card(l.secondary, "secondary")) end
+  local luna = lunaWindow()
+  if luna then table.insert(body, card(luna, "luna", "Luna Reserve · 7-day")) end
 
   table.insert(body, ui.row({ gap = 10, align = "stretch" }, {
     ui.column({ flexGrow = 1, fill = "surface_variant", radius = 12, padding = 10, align = "center", justify = "center" }, {
