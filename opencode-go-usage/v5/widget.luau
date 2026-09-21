@@ -1,6 +1,7 @@
 local PANEL_ID = "aaronroquefonseca/opencode-go-usage:details"
 local state = noctalia.state.get("usage") or { loading = true }
 local refreshSequence = 0
+local icon = noctalia.pluginDir() .. "/icons/opencode.svg"
 
 local function clamp(value)
   return math.max(0, math.min(100, value))
@@ -52,16 +53,27 @@ end
 
 local function render()
   local windows = type(state.windows) == "table" and state.windows or {}
-  local mode = tostring(noctalia.getConfig("display_mode") or "all")
+  local mode = tostring(noctalia.getConfig("display_mode") or "rolling_weekly")
   local style = tostring(noctalia.getConfig("panel_style") or "full")
-  local children = {
-    ui.glyph({ name = "code", size = 15, color = "primary" }),
-  }
+  local children = {}
+
+  -- Match Codex Usage semantics:
+  -- full = icon + usage, usage = usage only, icon = icon only.
+  if style ~= "usage" then
+    table.insert(children, ui.image({
+      key = "logo",
+      path = icon,
+      width = 15,
+      height = 15,
+      fit = "contain",
+    }))
+  end
 
   if style ~= "icon" then
     if state.loading and state.ok == nil then
       table.insert(children, ui.label({ text = "…", fontSize = 11, color = "on_surface_variant" }))
     else
+      local before = #children
       for _, item in ipairs({
         { key = "rolling", label = "5h" },
         { key = "weekly", label = "7d" },
@@ -72,7 +84,7 @@ local function render()
           if part then table.insert(children, part) end
         end
       end
-      if #children == 1 then
+      if #children == before then
         table.insert(children, ui.label({ text = "—", fontSize = 11, color = "on_surface_variant" }))
       end
     end
