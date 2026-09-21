@@ -8,7 +8,7 @@ This repository is a Noctalia plugin source: add the repository once, then enabl
 
 | Plugin | Type | Description | Main dependencies |
 | --- | --- | --- | --- |
-| Codex Usage | Bar, panel, service | Shows Codex five-hour and weekly usage limits, reset times, credits, and errors. | `python3`, `codex` |
+| Codex Usage | Bar, panel, service | Shows Codex five-hour and weekly usage limits, reset times, credits, and errors. | `python3`, `codex` |\n| OpenCode Go Usage | Bar, panel, service | Shows OpenCode Go five-hour, weekly, and monthly usage limits and reset times. | `python3` |
 | Arch Updater | Bar, panel, service | Checks Arch, AUR, and optional Flatpak updates and launches a configurable updater. | `pacman-contrib`; optionally `yay`, `flatpak` |
 | Web Search | Launcher | Searches Startpage, Google, DuckDuckGo, or a custom engine in the default browser. | `xdg-utils` |
 | File Search | Launcher | Searches configured folders using `fd` and opens files or folders with configurable commands. | `fd`, `python3`, `xdg-utils` |
