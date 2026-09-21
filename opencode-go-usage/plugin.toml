@@ -1,6 +1,6 @@
 id = "aaronroquefonseca/opencode-go-usage"
 name = "OpenCode Go Usage"
-version = "0.1.0"
+version = "0.1.1"
 plugin_api = 8
 min_noctalia = "5.0.0"
 author = "Aaron Roque Fonseca"
@@ -27,10 +27,10 @@ key = "display_mode"
 type = "select"
 label_key = "settings.display_mode.label"
 description_key = "settings.display_mode.description"
-default = "all"
+default = "rolling_weekly"
 options = [
-  { value = "all", label_key = "settings.display_mode.options.all" },
   { value = "rolling_weekly", label_key = "settings.display_mode.options.rolling_weekly" },
+  { value = "all", label_key = "settings.display_mode.options.all" },
   { value = "rolling", label_key = "settings.display_mode.options.rolling" },
   { value = "weekly", label_key = "settings.display_mode.options.weekly" },
   { value = "monthly", label_key = "settings.display_mode.options.monthly" },
