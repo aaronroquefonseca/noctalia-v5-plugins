@@ -1,0 +1,65 @@
+id = "aaronroquefonseca/opencode-go-usage"
+name = "OpenCode Go Usage"
+version = "0.1.0"
+plugin_api = 8
+min_noctalia = "5.0.0"
+author = "Aaron Roque Fonseca"
+license = "MIT"
+description = "Shows OpenCode Go 5-hour, weekly, and monthly usage limits in Noctalia v5."
+tags = ["AI", "Development", "Utility"]
+dependencies = ["python3"]
+icon = "code"
+
+[[setting]]
+key = "panel_style"
+type = "select"
+label_key = "settings.panel_style.label"
+description_key = "settings.panel_style.description"
+default = "full"
+options = [
+  { value = "full", label_key = "settings.panel_style.options.full" },
+  { value = "usage", label_key = "settings.panel_style.options.usage" },
+  { value = "icon", label_key = "settings.panel_style.options.icon" },
+]
+
+[[setting]]
+key = "display_mode"
+type = "select"
+label_key = "settings.display_mode.label"
+description_key = "settings.display_mode.description"
+default = "all"
+options = [
+  { value = "all", label_key = "settings.display_mode.options.all" },
+  { value = "rolling_weekly", label_key = "settings.display_mode.options.rolling_weekly" },
+  { value = "rolling", label_key = "settings.display_mode.options.rolling" },
+  { value = "weekly", label_key = "settings.display_mode.options.weekly" },
+  { value = "monthly", label_key = "settings.display_mode.options.monthly" },
+]
+
+[[setting]]
+key = "refresh_interval_seconds"
+type = "int"
+label_key = "settings.refresh_interval.label"
+description_key = "settings.refresh_interval.description"
+default = 300
+min = 60
+max = 3600
+step = 30
+
+[[service]]
+id = "usage-service"
+entry = "v5/service.luau"
+
+[[widget]]
+id = "bar"
+entry = "v5/widget.luau"
+
+[[panel]]
+id = "details"
+entry = "v5/panel.luau"
+width = 430
+height = 480
+placement = "attached"
+position = "auto"
+open_near_click = true
+dismiss_on_outside_click = true
