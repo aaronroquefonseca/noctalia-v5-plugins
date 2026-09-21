@@ -1,5 +1,6 @@
 local state = noctalia.state.get("usage") or { loading = true }
 local seq = 0
+local icon = noctalia.pluginDir() .. "/icons/opencode.svg"
 
 local function clamp(value)
   return math.max(0, math.min(100, value))
@@ -85,7 +86,7 @@ local function header()
   return ui.row({ gap = 10, align = "center" }, {
     ui.row({ gap = 8, align = "center", flexGrow = 1 }, {
       ui.row({ width = 36, height = 36, radius = 10, fill = "primary/0.14", align = "center", justify = "center" }, {
-        ui.glyph({ name = "code", size = 19, color = "primary" }),
+        ui.image({ path = icon, width = 20, height = 20, fit = "contain" }),
       }),
       ui.column({ gap = 1, flexGrow = 1 }, {
         ui.label({ text = "OpenCode Go usage", fontSize = 18, fontWeight = "bold", maxLines = 1 }),
