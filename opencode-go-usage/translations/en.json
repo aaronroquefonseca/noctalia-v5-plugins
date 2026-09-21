@@ -2,19 +2,19 @@
   "settings": {
     "panel_style": {
       "label": "Bar appearance",
-      "description": "Choose how much information OpenCode Go Usage shows in the bar.",
+      "description": "Choose how compact OpenCode Go Usage is in the bar.",
       "options": {
-        "full": "OpenCode Go and usage",
+        "full": "Icon and usage",
         "usage": "Usage only",
         "icon": "Icon only"
       }
     },
     "display_mode": {
       "label": "Usage values",
-      "description": "Choose which remaining-usage windows are shown in the bar.",
+      "description": "Choose which remaining-usage windows are shown when usage is visible.",
       "options": {
-        "all": "5-hour, weekly, and monthly",
         "rolling_weekly": "5-hour and weekly",
+        "all": "5-hour, weekly, and monthly",
         "rolling": "5-hour only",
         "weekly": "Weekly only",
         "monthly": "Monthly only"
