@@ -14,6 +14,18 @@ min_noctalia = "5.0.0"
 tags = ["AI", "Development", "Utility"]
 
 [[plugin]]
+id = "aaronroquefonseca/opencode-go-usage"
+name = "OpenCode Go Usage"
+version = "0.1.0"
+plugin_api = 8
+author = "Aaron Roque Fonseca"
+license = "MIT"
+icon = "code"
+description = "Shows OpenCode Go 5-hour, weekly, and monthly usage limits in Noctalia v5."
+min_noctalia = "5.0.0"
+tags = ["AI", "Development", "Utility"]
+
+[[plugin]]
 id = "aaronroquefonseca/arch-updater"
 name = "Arch Updater"
 version = "0.2.2"
