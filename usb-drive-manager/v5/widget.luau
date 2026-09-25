@@ -4,13 +4,13 @@ local sequence = 0
 
 local function render()
   local count = tonumber(state.count) or 0
-  local hidden = noctalia.getConfig("hide_when_empty") ~= false and count == 0 and not state.loading and state.ok ~= false
+  local hidden = noctalia.getConfig("hide_when_empty") ~= false and count == 0 and state.ok ~= false
   barWidget.setVisible(not hidden)
 
   local color = state.ok == false and "error" or (count > 0 and "primary" or "on_surface_variant")
   local children = {
     ui.glyph({ name = "usb", size = 14, color = color }),
-    ui.label({ text = state.loading and "…" or tostring(count), fontSize = 11, fontWeight = "semibold", color = color, maxLines = 1 }),
+    ui.label({ text = (state.loading and count == 0) and "…" or tostring(count), fontSize = 11, fontWeight = "semibold", color = color, maxLines = 1 }),
   }
   if state.ok == false then table.insert(children, ui.glyph({ name = "alert-circle", size = 11, color = "error" })) end
   barWidget.render(ui.row({ gap = 5, align = "center" }, children))
